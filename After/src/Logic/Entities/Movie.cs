@@ -6,7 +6,6 @@ namespace Logic.Entities
     {
         public virtual string Name { get; set; }
 
-        [JsonIgnore]
         public virtual LicensingModel LicensingModel { get; set; }
     }
 }
