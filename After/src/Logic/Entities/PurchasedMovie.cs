@@ -15,6 +15,11 @@ namespace Logic.Entities
 
         public virtual DateTime PurchaseDate { get; set; }
 
-        public virtual DateTime? ExpirationDate { get; set; }
+        private DateTime? _expirationDate;
+        public virtual ExpirationDate ExpirationDate
+        {
+            get => (ExpirationDate)_expirationDate;
+            set => _expirationDate = value;
+        }
     }
 }

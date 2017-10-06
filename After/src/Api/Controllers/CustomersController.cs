@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using CSharpFunctionalExtensions;
 using Logic.Dtos;
 using Logic.Entities;
 using Logic.Repositories;
@@ -37,8 +38,8 @@ namespace Api.Controllers
             var dto = new CustomerDto
             {
                 Id = customer.Id,
-                Name = customer.Name,
-                Email = customer.Email,
+                Name = customer.Name.Value,
+                Email = customer.Email.Value,
                 MoneySpent = customer.MoneySpent,
                 Status = customer.Status.ToString(),
                 StatusExpirationDate = customer.StatusExpirationDate,
@@ -66,8 +67,8 @@ namespace Api.Controllers
             List<CustomerInListDto> dtos = customers.Select(x => new CustomerInListDto
             {
                 Id = x.Id,
-                Name = x.Name,
-                Email = x.Email,
+                Name = x.Name.Value,
+                Email = x.Email.Value,
                 MoneySpent = x.MoneySpent,
                 Status = x.Status.ToString(),
                 StatusExpirationDate = x.StatusExpirationDate
@@ -81,21 +82,25 @@ namespace Api.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                Result<CustomerName> customerNameOrError = CustomerName.Create(item.Name);
+                Result<Email> emailOrError = Email.Create(item.Email);
+
+                Result result = Result.Combine(customerNameOrError, emailOrError);
+                if (result.IsFailure)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(result.Error);
                 }
 
-                if (_customerRepository.GetByEmail(item.Email) != null)
+                if (_customerRepository.GetByEmail(emailOrError.Value) != null)
                 {
                     return BadRequest("Email is already in use: " + item.Email);
                 }
-                
+
                 var customer = new Customer
                 {
-                    Name = item.Name,
-                    Email = item.Email,
-                    MoneySpent = 0,
+                    Name = customerNameOrError.Value,
+                    Email = emailOrError.Value,
+                    MoneySpent = Dollars.Of(0),
                     Status = CustomerStatus.Regular,
                     StatusExpirationDate = null
                 };
@@ -116,9 +121,10 @@ namespace Api.Controllers
         {
             try
             {
-                if (!ModelState.IsValid)
+                Result<CustomerName> customerNameOrError = CustomerName.Create(item.Name);
+                if (customerNameOrError.IsFailure)
                 {
-                    return BadRequest(ModelState);
+                    return BadRequest(customerNameOrError.Error);
                 }
 
                 Customer customer = _customerRepository.GetById(id);
@@ -127,7 +133,7 @@ namespace Api.Controllers
                     return BadRequest("Invalid customer id: " + id);
                 }
 
-                customer.Name = item.Name;
+                customer.Name = customerNameOrError.Value;
                 _customerRepository.SaveChanges();
 
                 return Ok();
@@ -156,8 +162,7 @@ namespace Api.Controllers
                     return BadRequest("Invalid customer id: " + id);
                 }
 
-                if (customer.PurchasedMovies.Any(
-                    x => x.MovieId == movie.Id && (x.ExpirationDate == null || x.ExpirationDate.Value >= DateTime.UtcNow)))
+                if (customer.PurchasedMovies.Any(x => x.MovieId == movie.Id && !x.ExpirationDate.IsExpired))
                 {
                     return BadRequest("The movie is already purchased: " + movie.Name);
                 }
@@ -186,8 +191,7 @@ namespace Api.Controllers
                     return BadRequest("Invalid customer id: " + id);
                 }
 
-                if (customer.Status == CustomerStatus.Advanced && 
-                    (customer.StatusExpirationDate == null || customer.StatusExpirationDate.Value < DateTime.UtcNow))
+                if (customer.Status == CustomerStatus.Advanced && !customer.StatusExpirationDate.IsExpired)
                 {
                     return BadRequest("The customer already has the Advanced status");
                 }
