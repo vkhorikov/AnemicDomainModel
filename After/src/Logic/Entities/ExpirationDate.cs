@@ -18,9 +18,6 @@ namespace Logic.Entities
 
         public static Result<ExpirationDate> Create(DateTime date)
         {
-            if (date < DateTime.UtcNow)
-                return Result.Fail<ExpirationDate>("Expiration date cannot be in the past");
-
             return Result.Ok(new ExpirationDate(date));
         }
 
