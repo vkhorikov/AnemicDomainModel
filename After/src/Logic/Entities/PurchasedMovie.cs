@@ -11,7 +11,12 @@ namespace Logic.Entities
 
         public virtual long CustomerId { get; set; }
 
-        public virtual decimal Price { get; set; }
+        private decimal _price;
+        public virtual Dollars Price
+        {
+            get => Dollars.Of(_price);
+            set => _price = value;
+        }
 
         public virtual DateTime PurchaseDate { get; set; }
 
