@@ -62,9 +62,9 @@
     <Compile Include="Dtos\MovieDto.cs" />
     <Compile Include="Dtos\PurchasedMovieDto.cs" />
     <Compile Include="Dtos\UpdateCustomerDto.cs" />
+    <Compile Include="Entities\CustomerStatus.cs" />
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\CustomerName.cs" />
-    <Compile Include="Entities\CustomerStatus.cs" />
     <Compile Include="Entities\Dollars.cs" />
     <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\Entity.cs" />
