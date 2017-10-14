@@ -54,8 +54,17 @@ namespace Logic.Entities
             StatusExpirationDate = null;
         }
 
-        public virtual void AddPurchasedMovie(PurchasedMovie purchasedMovie, Dollars price)
+        public virtual void AddPurchasedMovie(Movie movie, ExpirationDate expirationDate, Dollars price)
         {
+            var purchasedMovie = new PurchasedMovie
+            {
+                MovieId = movie.Id,
+                CustomerId = Id,
+                ExpirationDate = expirationDate,
+                Price = price,
+                PurchaseDate = DateTime.UtcNow
+            };
+
             _purchasedMovies.Add(purchasedMovie);
             MoneySpent += price;
         }

@@ -43,17 +43,7 @@ namespace Logic.Services
         {
             ExpirationDate expirationDate = _movieService.GetExpirationDate(movie.LicensingModel);
             Dollars price = CalculatePrice(customer.Status, customer.StatusExpirationDate, movie.LicensingModel);
-
-            var purchasedMovie = new PurchasedMovie
-            {
-                MovieId = movie.Id,
-                CustomerId = customer.Id,
-                ExpirationDate = expirationDate,
-                Price = price,
-                PurchaseDate = DateTime.UtcNow
-            };
-
-            customer.AddPurchasedMovie(purchasedMovie, price);
+            customer.AddPurchasedMovie(movie, expirationDate, price);
         }
 
         public bool PromoteCustomer(Customer customer)
