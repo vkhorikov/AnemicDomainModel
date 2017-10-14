@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.Mapping;
+﻿using FluentNHibernate;
+using FluentNHibernate.Mapping;
 using Logic.Entities;
 
 namespace Logic.Mappings
@@ -9,8 +10,26 @@ namespace Logic.Mappings
         {
             Id(x => x.Id);
 
+            DiscriminateSubClassesOnColumn("LicensingModel");
+
             Map(x => x.Name);
-            Map(x => x.LicensingModel).CustomType<int>();
+            Map(Reveal.Member<Movie>("LicensingModel")).CustomType<int>();
+        }
+    }
+
+    public class TwoDaysMovieMap : SubclassMap<TwoDaysMovie>
+    {
+        public TwoDaysMovieMap()
+        {
+            DiscriminatorValue(1);
+        }
+    }
+
+    public class LifeLongMovieMap : SubclassMap<LifeLongMovie>
+    {
+        public LifeLongMovieMap()
+        {
+            DiscriminatorValue(2);
         }
     }
 }

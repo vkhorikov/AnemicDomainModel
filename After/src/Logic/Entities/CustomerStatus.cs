@@ -22,8 +22,10 @@ namespace Logic.Entities
             : this()
         {
             Type = type;
-            _expirationDate = expirationDate;
+            _expirationDate = expirationDate ?? throw new ArgumentNullException(nameof(expirationDate));
         }
+
+        public decimal GetDiscount() => IsAdvanced ? 0.25m : 0m;
 
         public CustomerStatus Promote()
         {

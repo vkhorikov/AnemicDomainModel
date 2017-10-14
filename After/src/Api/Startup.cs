@@ -1,5 +1,4 @@
 ﻿using Logic.Repositories;
-using Logic.Services;
 using Logic.Utils;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -25,8 +24,6 @@ namespace Api
             services.AddScoped<UnitOfWork>();
             services.AddTransient<MovieRepository>();
             services.AddTransient<CustomerRepository>();
-            services.AddTransient<MovieService>();
-            services.AddTransient<CustomerService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
