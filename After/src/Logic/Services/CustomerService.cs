@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Logic.Entities;
 
@@ -52,8 +53,7 @@ namespace Logic.Services
                 PurchaseDate = DateTime.UtcNow
             };
 
-            customer.PurchasedMovies.Add(purchasedMovie);
-            customer.MoneySpent += price;
+            customer.AddPurchasedMovie(purchasedMovie, price);
         }
 
         public bool PromoteCustomer(Customer customer)

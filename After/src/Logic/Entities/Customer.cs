@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Logic.Entities
 {
@@ -32,9 +33,31 @@ namespace Logic.Entities
         public virtual Dollars MoneySpent
         {
             get => Dollars.Of(_moneySpent);
-            set => _moneySpent = value;
+            protected set => _moneySpent = value;
         }
 
-        public virtual IList<PurchasedMovie> PurchasedMovies { get; set; }
+        private readonly IList<PurchasedMovie> _purchasedMovies;
+        public virtual IReadOnlyList<PurchasedMovie> PurchasedMovies => _purchasedMovies.ToList();
+
+        protected Customer()
+        {
+            _purchasedMovies = new List<PurchasedMovie>();
+        }
+
+        public Customer(CustomerName name, Email email) : this()
+        {
+            _name = name ?? throw new ArgumentNullException(nameof(name));
+            _email = email ?? throw new ArgumentNullException(nameof(email));
+
+            MoneySpent = Dollars.Of(0);
+            Status = CustomerStatus.Regular;
+            StatusExpirationDate = null;
+        }
+
+        public virtual void AddPurchasedMovie(PurchasedMovie purchasedMovie, Dollars price)
+        {
+            _purchasedMovies.Add(purchasedMovie);
+            MoneySpent += price;
+        }
     }
 }
