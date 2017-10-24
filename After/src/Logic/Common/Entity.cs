@@ -1,11 +1,11 @@
 ﻿using System;
 using NHibernate.Proxy;
 
-namespace Logic.Entities
+namespace Logic.Common
 {
     public abstract class Entity
     {
-        public virtual long Id { get; set; }
+        public virtual long Id { get; protected set; }
 
         public override bool Equals(object obj)
         {

@@ -1,8 +1,7 @@
 using System;
 using FluentNHibernate.Mapping;
-using Logic.Entities;
 
-namespace Logic.Mappings
+namespace Logic.Customers
 {
     public class CustomerMap : ClassMap<Customer>
     {

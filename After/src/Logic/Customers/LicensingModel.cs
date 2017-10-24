@@ -1,4 +1,4 @@
-namespace Logic.Entities
+namespace Logic.Customers
 {
     public enum LicensingModel
     {

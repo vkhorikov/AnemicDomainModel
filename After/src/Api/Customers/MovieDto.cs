@@ -1,4 +1,4 @@
-﻿namespace Logic.Dtos
+﻿namespace Api.Customers
 {
     public class MovieDto
     {

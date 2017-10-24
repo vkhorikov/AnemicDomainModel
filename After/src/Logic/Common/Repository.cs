@@ -1,7 +1,6 @@
-﻿using Logic.Entities;
-using Logic.Utils;
+﻿using Logic.Utils;
 
-namespace Logic.Repositories
+namespace Logic.Common
 {
     public abstract class Repository<T>
         where T : Entity
@@ -21,11 +20,6 @@ namespace Logic.Repositories
         public void Add(T entity)
         {
             _unitOfWork.SaveOrUpdate(entity);
-        }
-
-        public void SaveChanges()
-        {
-            _unitOfWork.Commit();
         }
     }
 }

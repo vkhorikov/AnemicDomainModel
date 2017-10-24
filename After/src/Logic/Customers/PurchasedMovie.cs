@@ -1,7 +1,8 @@
 ﻿using System;
-using Newtonsoft.Json;
+using Logic.Common;
+using Logic.Movies;
 
-namespace Logic.Entities
+namespace Logic.Customers
 {
     public class PurchasedMovie : Entity
     {

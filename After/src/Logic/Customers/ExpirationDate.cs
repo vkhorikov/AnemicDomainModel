@@ -1,7 +1,7 @@
 ﻿using System;
 using CSharpFunctionalExtensions;
 
-namespace Logic.Entities
+namespace Logic.Customers
 {
     public class ExpirationDate : ValueObject<ExpirationDate>
     {

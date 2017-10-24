@@ -1,11 +1,11 @@
-﻿using Logic.Repositories;
+﻿using Logic.Customers;
+using Logic.Movies;
 using Logic.Utils;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Api
+namespace Api.Utils
 {
     public class Startup
     {
@@ -26,13 +26,9 @@ namespace Api
             services.AddTransient<CustomerRepository>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
+            app.UseMiddleware<ExceptionHandler>();
             app.UseMvc();
         }
     }
