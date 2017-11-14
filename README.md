@@ -1,14 +1,12 @@
 Welcome to Refactoring from Anemic Domain Model Towards a Rich One
 =====================
 
-This is the source code for my Pluralsight course Refactoring from Anemic Domain Model Towards a Rich One (link is coming soon).
+This is the source code for my Pluralsight course [Refactoring from Anemic Domain Model Towards a Rich One][L5].
 
 How to Get Started
 --------------
 
 There are 2 versions of the source code: Before and After. You can go ahead and look at the After version but I would recommend that you follow the course and do all refactoring steps along with me.
-
-This repository is work in progress.
 
 In order to run the application, you need to create a database and change the connection string in the composition root.
 
@@ -16,3 +14,4 @@ In order to run the application, you need to create a database and change the co
 [L3]: DddInPractice.UI/App.xaml.cs
 [L1]: http://www.apache.org/licenses/LICENSE-2.0
 [L4]: https://www.pluralsight.com/courses/domain-driven-design-in-practice
+[L5]: http://www.pluralsight.com/courses/refactoring-anemic-domain-model
