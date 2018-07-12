@@ -27,7 +27,6 @@ namespace Logic.Utils
             try
             {
                 _transaction.Commit();
-                throw new Exception();
             }
             finally
             {
