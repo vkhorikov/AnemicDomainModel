@@ -78,12 +78,19 @@ namespace Api.Customers
             Result<CustomerName> customerNameOrError = CustomerName.Create(item.Name);
             Result<Email> emailOrError = Email.Create(item.Email);
 
-            Result result = Result.Combine(customerNameOrError, emailOrError);
-            if (result.IsFailure)
-                return Error(result.Error);
+            if (customerNameOrError.IsFailure)
+                ModelState.AddModelError(nameof(item.Name), customerNameOrError.Error);
+            if (emailOrError.IsFailure)
+                ModelState.AddModelError(nameof(item.Email), emailOrError.Error);
+
+            if (!ModelState.IsValid)
+                return Error(ModelState);
 
             if (_customerRepository.GetByEmail(emailOrError.Value) != null)
-                return Error("Email is already in use: " + item.Email);
+            {
+                ModelState.AddModelError(nameof(item.Email), "Email is already in use: " + item.Email);
+                return Error(ModelState);
+            }
 
             var customer = new Customer(customerNameOrError.Value, emailOrError.Value);
             _customerRepository.Add(customer);
