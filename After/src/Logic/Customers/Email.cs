@@ -20,6 +20,9 @@ namespace Logic.Customers
             if (email.Length == 0)
                 return Result.Fail<Email>("Email should not be empty");
 
+            if(email.Length > 150)
+                return Result.Fail<Email>("Email is too long");
+
             if (!Regex.IsMatch(email, @"^(.+)@(.+)$"))
                 return Result.Fail<Email>("Email is invalid");
 
