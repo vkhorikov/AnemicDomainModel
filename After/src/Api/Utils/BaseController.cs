@@ -1,5 +1,6 @@
 ﻿using Logic.Utils;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace Api.Utils
 {
@@ -22,6 +23,11 @@ namespace Api.Utils
         {
             _unitOfWork.Commit();
             return base.Ok(Envelope.Ok(result));
+        }
+
+        protected IActionResult Error(ModelStateDictionary modelState)
+        {
+            return BadRequest(modelState);
         }
 
         protected IActionResult Error(string errorMessage)
