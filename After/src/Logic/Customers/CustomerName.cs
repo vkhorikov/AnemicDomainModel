@@ -19,7 +19,7 @@ namespace Logic.Customers
             if (customerName.Length == 0)
                 return Result.Fail<CustomerName>("Customer name should not be empty");
 
-            if (customerName.Length > 100)
+            if (customerName.Length > 50)
                 return Result.Fail<CustomerName>("Customer name is too long");
 
             return Result.Ok(new CustomerName(customerName));
