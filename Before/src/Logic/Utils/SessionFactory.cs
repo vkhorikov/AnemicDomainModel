@@ -27,7 +27,7 @@ namespace Logic.Utils
         private static ISessionFactory BuildSessionFactory(string connectionString)
         {
             FluentConfiguration configuration = Fluently.Configure()
-                .Database(MsSqlConfiguration.MsSql2012.ConnectionString(connectionString))
+                .Database(MsSqlConfiguration.MsSql7.ConnectionString(connectionString))
                 .Mappings(m => m.FluentMappings
                     .AddFromAssembly(Assembly.GetExecutingAssembly())
                     .Conventions.Add(

@@ -53,6 +53,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dtos\CustomerDto.cs" />
+    <Compile Include="Dtos\CustomerInListDto.cs" />
+    <Compile Include="Dtos\MovieDto.cs" />
+    <Compile Include="Dtos\PurchasedMovieDto.cs" />
     <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\CustomerStatus.cs" />
     <Compile Include="Entities\Entity.cs" />
