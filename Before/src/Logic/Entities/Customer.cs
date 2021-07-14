@@ -8,20 +8,32 @@ namespace Logic.Entities
 {
     public class Customer : Entity
     {
-        [Required]
-        [MaxLength(100, ErrorMessage = "Name is too long")]
-        public virtual string Name { get; set; }
+        private string _name;
+        public virtual CustomerName Name
+        {
+            get => (CustomerName)_name; //explicit conversion used here
+            set => _name = value;   //implicit conversion used here
 
-        [Required]
-        [RegularExpression(@"^(.+)@(.+)$", ErrorMessage = "Email is invalid")]
-        public virtual string Email { get; set; }
-
+        }
+        private string _email;
+        public virtual Email Email 
+        {
+            get => (Email)_email;
+            set => _email = value;
+        }
         public virtual CustomerStatus Status { get; set; }
-
-        public virtual DateTime? StatusExpirationDate { get; set; }
-
-        public virtual decimal MoneySpent { get; set; }
-
+        public ExpirationDate _statusExpirationDate;
+        public virtual ExpirationDate StatusExpirationDate
+        {
+            get => (ExpirationDate)_statusExpirationDate;
+            set => _statusExpirationDate = value;
+        }
+        private decimal _moneySpent;
+        public virtual Dollars MoneySpent
+        {
+            get => Dollars.Of(_moneySpent);
+            set => _moneySpent = value;
+        }
         public virtual IList<PurchasedMovie> PurchasedMovies { get; set; }
     }
 }

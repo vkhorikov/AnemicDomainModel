@@ -53,16 +53,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dtos\CreateCustomerDto.cs" />
     <Compile Include="Dtos\CustomerDto.cs" />
     <Compile Include="Dtos\CustomerInListDto.cs" />
     <Compile Include="Dtos\MovieDto.cs" />
     <Compile Include="Dtos\PurchasedMovieDto.cs" />
+    <Compile Include="Dtos\UpdateCustomerDto.cs" />
     <Compile Include="Entities\Customer.cs" />
+    <Compile Include="Entities\CustomerName.cs" />
     <Compile Include="Entities\CustomerStatus.cs" />
+    <Compile Include="Entities\Dollars.cs" />
+    <Compile Include="Entities\Email.cs" />
     <Compile Include="Entities\Entity.cs" />
+    <Compile Include="Entities\ExpirationDate.cs" />
     <Compile Include="Entities\LicensingModel.cs" />
     <Compile Include="Entities\Movie.cs" />
     <Compile Include="Entities\PurchasedMovie.cs" />
+    <Compile Include="Entities\Result.cs" />
+    <Compile Include="Entities\ValueObject.cs" />
     <Compile Include="Mappings\CustomerMap.cs" />
     <Compile Include="Mappings\MovieMap.cs" />
     <Compile Include="Mappings\PurchasedMovieMap.cs" />
