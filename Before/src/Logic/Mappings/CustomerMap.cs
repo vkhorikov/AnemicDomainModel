@@ -16,7 +16,7 @@ namespace Logic.Mappings
             Map(x => x.StatusExpirationDate).CustomType<DateTime?>().Access.CamelCaseField(Prefix.Underscore).Nullable();
             Map(x => x.MoneySpent).CustomType<decimal?>().Access.CamelCaseField(Prefix.Underscore);
 
-            HasMany(x => x.PurchasedMovies);
+            HasMany(x => x.PurchasedMovies).Access.CamelCaseField(Prefix.Underscore);
         }
     }
 }
