@@ -25,8 +25,6 @@ namespace Api
             services.AddScoped<UnitOfWork>();
             services.AddTransient<MovieRepository>();
             services.AddTransient<CustomerRepository>();
-            services.AddTransient<MovieService>();
-            services.AddTransient<CustomerService>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)

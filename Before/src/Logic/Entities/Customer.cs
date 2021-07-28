@@ -52,8 +52,11 @@ namespace Logic.Entities
 
         //Here is how the client can add movies. This is better than breaking encapsulation by exposing the collection.
         //Always introduce a raed-only public collection, in top of a private mutable one.
-        public virtual void AddPurchasedMovie(Movie movie, ExpirationDate expirationDate, Dollars price)
+        public virtual void PurchasedMovie(Movie movie)
         {
+            ExpirationDate expirationDate = movie.GetExpirationDate();
+            Dollars price = movie.CalculatePrice(Status);
+
             var purchasedMovie = new PurchasedMovie(movie, this, price, expirationDate);
             _purchasedMovies.Add(purchasedMovie);
             MoneySpent += price;

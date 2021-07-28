@@ -24,6 +24,8 @@ namespace Logic.Entities
             return Type == other.Type && ExpirationDate == other.ExpirationDate;
         }
 
+        public decimal GetDiscount() => IsAdvanced ? 0.25m : 0m;
+
         public CustomerStatus Promote()
         {
             return new CustomerStatus(CustomerStatusType.Advanced, (ExpirationDate)DateTime.UtcNow.AddYears(1));

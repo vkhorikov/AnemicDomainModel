@@ -4,7 +4,6 @@ using System.Linq;
 using Logic.Dtos;
 using Logic.Entities;
 using Logic.Repositories;
-using Logic.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -14,13 +13,11 @@ namespace Api.Controllers
     {
         private readonly MovieRepository _movieRepository;
         private readonly CustomerRepository _customerRepository;
-        private readonly CustomerService _customerService;
 
-        public CustomersController(MovieRepository movieRepository, CustomerRepository customerRepository, CustomerService customerService)
+        public CustomersController(MovieRepository movieRepository, CustomerRepository customerRepository)
         {
             _customerRepository = customerRepository;
             _movieRepository = movieRepository;
-            _customerService = customerService;
         }
 
         [HttpGet]
@@ -156,7 +153,7 @@ namespace Api.Controllers
                     return BadRequest("The movie is already purchased: " + movie.Name);
                 }
 
-                _customerService.PurchaseMovie(customer, movie);
+                customer.PurchasedMovie(movie);
 
                 _customerRepository.SaveChanges();
 
