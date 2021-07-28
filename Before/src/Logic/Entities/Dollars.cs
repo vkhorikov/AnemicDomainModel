@@ -10,6 +10,7 @@ namespace Logic.Entities
     {
         private const decimal MaxDollorAmount = 1_000_000;
         public decimal Value { get; }
+        public bool IsZero => Value == 0;
 
         private Dollars(decimal value)
         {

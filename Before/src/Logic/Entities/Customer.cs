@@ -1,4 +1,5 @@
 using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,20 +21,16 @@ namespace Logic.Entities
         public virtual Email Email 
         {
             get => (Email)_email;
-            set => _email = value;
+            protected set => _email = value;    //Protected not private as this property is mapped to the database via the ORM.
         }
+
         public virtual CustomerStatus Status { get; set; }
-        public ExpirationDate _statusExpirationDate;
-        public virtual ExpirationDate StatusExpirationDate
-        {
-            get => (ExpirationDate)_statusExpirationDate;
-            set => _statusExpirationDate = value;
-        }
+       
         private decimal _moneySpent;
         public virtual Dollars MoneySpent
         {
             get => Dollars.Of(_moneySpent);
-            set => _moneySpent = value;
+            protected set => _moneySpent = value;
         }
         private readonly IList<PurchasedMovie> _purchasedMovies;
         public virtual IReadOnlyList<PurchasedMovie> PurchasedMovies => _purchasedMovies.ToList();
@@ -51,21 +48,13 @@ namespace Logic.Entities
 
             MoneySpent = Dollars.Of(0);
             Status = CustomerStatus.Regular;
-            StatusExpirationDate = null;
         }
 
         //Here is how the client can add movies. This is better than breaking encapsulation by exposing the collection.
         //Always introduce a raed-only public collection, in top of a private mutable one.
         public virtual void AddPurchasedMovie(Movie movie, ExpirationDate expirationDate, Dollars price)
         {
-            var purchasedMovie = new PurchasedMovie
-            {
-                MovieId = movie.Id,
-                CustomerId = Id,
-                ExpirationDate = expirationDate,
-                Price = price,
-                PurchaseDate = DateTime.UtcNow
-            };
+            var purchasedMovie = new PurchasedMovie(movie, this, price, expirationDate);
             _purchasedMovies.Add(purchasedMovie);
             MoneySpent += price;
         }

@@ -46,7 +46,7 @@ namespace Api.Controllers
                     PurchaseDate = x.PurchaseDate,
                     Movie = new MovieDto
                     {
-                        Id = x.MovieId,
+                        Id = x.Movie.Id,
                         Name = x.Movie.Name
                     }
                 }).ToList()
@@ -151,7 +151,7 @@ namespace Api.Controllers
                     return BadRequest("Invalid customer id: " + id);
                 }
 
-                if (customer.PurchasedMovies.Any(x => x.MovieId == movie.Id && !x.ExpirationDate.IsExpired))
+                if (customer.PurchasedMovies.Any(x => x.Movie.Id == movie.Id && !x.ExpirationDate.IsExpired))
                 {
                     return BadRequest("The movie is already purchased: " + movie.Name);
                 }
