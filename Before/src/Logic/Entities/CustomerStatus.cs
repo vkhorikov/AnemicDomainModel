@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Logic.Entities
 {
-    class CustomerStatus : ValueObject<CustomerStatus>
+    public class CustomerStatus : ValueObject<CustomerStatus>
     {
         public static readonly CustomerStatus Regular = new CustomerStatus(CustomerStatusType.Regular, ExpirationDate.Infinite);
         public CustomerStatusType Type { get; }
         private readonly DateTime? _expirationDate;
-        public ExpirationDate StatusExpirationDate => (ExpirationDate)_expirationDate;
+        public ExpirationDate ExpirationDate => (ExpirationDate)_expirationDate;
 
         private CustomerStatus(CustomerStatusType type, ExpirationDate expirationDate)
         {
