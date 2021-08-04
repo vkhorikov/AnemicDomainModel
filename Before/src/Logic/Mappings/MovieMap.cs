@@ -1,4 +1,5 @@
-﻿using FluentNHibernate.Mapping;
+﻿using FluentNHibernate;
+using FluentNHibernate.Mapping;
 using Logic.Entities;
 
 namespace Logic.Mappings
@@ -24,7 +25,7 @@ namespace Logic.Mappings
         }
     }
 
-    public class LifeLongMovieMap : SubClassPart<LifeLongMovieMap>
+    public class LifeLongMovieMap : SubclassMap<LifeLongMovieMap>
     {
         public LifeLongMovieMap()
         {

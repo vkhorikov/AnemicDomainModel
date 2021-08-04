@@ -75,8 +75,7 @@ namespace Api.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreateCustomerDto item)
         {
-            try
-            {
+            
                 Result<CustomerName> customerNameOrError = CustomerName.Create(item.Name);
                 Result<Email> emailOrError = Email.Create(item.Email);
 
@@ -95,19 +94,12 @@ namespace Api.Controllers
                 _customerRepository.Add(customer);
 
                 return Ok();
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new { error = e.Message });
-            }
         }
 
         [HttpPut]
         [Route("{id}")]
         public IActionResult Update(long id, [FromBody] UpdateCustomerDto item)
         {
-            try
-            {
                 Result<CustomerName> customerNameOrError = CustomerName.Create(item.Name);
                 if(customerNameOrError.IsFailure)
                 {
@@ -121,21 +113,13 @@ namespace Api.Controllers
                 }
 
                 customer.Name = customerNameOrError.value;
-
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new { error = e.Message });
-            }
+            return Ok();
         }
 
         [HttpPost]
         [Route("{id}/movies")]
         public IActionResult PurchaseMovie(long id, [FromBody] long movieId)
         {
-            try
-            {
                 Movie movie = _movieRepository.GetById(movieId);
                 if (movie == null)
                 {
@@ -156,19 +140,12 @@ namespace Api.Controllers
                 customer.PurchasedMovie(movie);
 
                 return Ok();
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new { error = e.Message });
-            }
         }
 
         [HttpPost]
         [Route("{id}/promotion")]
         public IActionResult PromoteCustomer(long id)
         {
-            try
-            {
                 Customer customer = _customerRepository.GetById(id);
                 if (customer == null)
                 {
@@ -186,12 +163,7 @@ namespace Api.Controllers
                     return Error("Cannot promote the customer");
                 }
 
-                return Ok();
-            }
-            catch (Exception e)
-            {
-                return StatusCode(500, new { error = e.Message });
-            }
+                return Ok();  
         }
     }
 }

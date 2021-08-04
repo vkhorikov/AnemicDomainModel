@@ -6,7 +6,7 @@ namespace Logic.Entities
     public abstract class Movie : Entity
     {
         public virtual string Name { get; protected set; }
-        protected virtual LicensingModel LicensingModel { get; protected set; }
+        protected virtual LicensingModel LicensingModel { get; set; }
 
         public abstract ExpirationDate GetExpirationDate();
         public virtual Dollars CalculatePrice(CustomerStatus status)
@@ -20,7 +20,7 @@ namespace Logic.Entities
     
     public class TwoDaysMovie : Movie
     {
-        public override Dollars GetBasePrice()
+        protected override Dollars GetBasePrice()
         {
             return Dollars.Of(4);
         }
@@ -33,7 +33,7 @@ namespace Logic.Entities
 
     public class LifeLingMovie : Movie
     {
-        public override Dollars GetBasePrice()
+        protected override Dollars GetBasePrice()
         {
             return Dollars.Of(8);
         }

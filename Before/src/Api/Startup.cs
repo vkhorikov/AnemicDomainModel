@@ -27,13 +27,9 @@ namespace Api
             services.AddTransient<CustomerRepository>();
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
+            app.UseMiddleware<ExceptionHandler>();
             app.UseMvc();
         }
     }
