@@ -53,31 +53,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Dtos\CreateCustomerDto.cs" />
-    <Compile Include="Dtos\CustomerDto.cs" />
-    <Compile Include="Dtos\CustomerInListDto.cs" />
-    <Compile Include="Dtos\MovieDto.cs" />
-    <Compile Include="Dtos\PurchasedMovieDto.cs" />
-    <Compile Include="Dtos\UpdateCustomerDto.cs" />
-    <Compile Include="Entities\CustomerStatus.cs" />
-    <Compile Include="Entities\Customer.cs" />
-    <Compile Include="Entities\CustomerName.cs" />
-    <Compile Include="Entities\Dollars.cs" />
-    <Compile Include="Entities\Email.cs" />
-    <Compile Include="Entities\Entity.cs" />
-    <Compile Include="Entities\ExpirationDate.cs" />
-    <Compile Include="Entities\LicensingModel.cs" />
-    <Compile Include="Entities\Movie.cs" />
-    <Compile Include="Entities\PurchasedMovie.cs" />
+    <Compile Include="Customers\CustomerStatus.cs" />
+    <Compile Include="Customers\Customer.cs" />
+    <Compile Include="Customers\CustomerName.cs" />
+    <Compile Include="Customers\Dollars.cs" />
+    <Compile Include="Customers\Email.cs" />
+    <Compile Include="Common\Entity.cs" />
+    <Compile Include="Customers\ExpirationDate.cs" />
+    <Compile Include="Customers\LicensingModel.cs" />
+    <Compile Include="Movies\Movie.cs" />
+    <Compile Include="Customers\PurchasedMovie.cs" />
     <Compile Include="Entities\Result.cs" />
     <Compile Include="Entities\ValueObject.cs" />
-    <Compile Include="Mappings\CustomerMap.cs" />
-    <Compile Include="Mappings\MovieMap.cs" />
-    <Compile Include="Mappings\PurchasedMovieMap.cs" />
+    <Compile Include="Customers\CustomerMap.cs" />
+    <Compile Include="Movies\MovieMap.cs" />
+    <Compile Include="Customers\PurchasedMovieMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\CustomerRepository.cs" />
-    <Compile Include="Repositories\MovieRepository.cs" />
-    <Compile Include="Repositories\Repository.cs" />
+    <Compile Include="Customers\CustomerRepository.cs" />
+    <Compile Include="Movies\MovieRepository.cs" />
+    <Compile Include="Common\Repository.cs" />
     <Compile Include="Utils\SessionFactory.cs" />
     <Compile Include="Utils\UnitOfWork.cs" />
   </ItemGroup>
@@ -85,5 +79,6 @@
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
