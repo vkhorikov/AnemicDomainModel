@@ -49,8 +49,18 @@ namespace Logic.Entities
 
         //Here is how the client can add movies. This is better than breaking encapsulation by exposing the collection.
         //Always introduce a raed-only public collection, in top of a private mutable one.
+        
+        //Good to seperate the check and the actual operation in seperate methods in the domain class, as is done here. 
+        //That way you adhere to the Command-query seperation principle(CQS) => any method either returns a value, or mutates the state. Never both. This is not always possible to adhere to. For instance, when the operation must occur immediately after the check.
+        public virtual bool HasPurchasedMovie(Movie movie)
+        {
+            return PurchasedMovies.Any(x => x.Movie == movie && !x.ExpirationDate.IsExpired);
+        }
         public virtual void PurchasedMovie(Movie movie)
         {
+            if (HasPurchasedMovie(movie))
+                throw new Exception();
+
             ExpirationDate expirationDate = movie.GetExpirationDate();
             Dollars price = movie.CalculatePrice(Status);
 
@@ -58,20 +68,28 @@ namespace Logic.Entities
             _purchasedMovies.Add(purchasedMovie);
             MoneySpent += price;
         }
-        public virtual bool Promote()
+
+        public virtual Result CanPromote()
         {
-            // at least 2 active movies during the last 30 days
+            if (Status.IsAdvanced)
+                return Result.Fail("The customer already has the Advanced status");
+
             if (PurchasedMovies.Count(x =>
             x.ExpirationDate == ExpirationDate.Infinite || x.ExpirationDate.Date >= DateTime.UtcNow.AddDays(-30)) < 2)
-                return false;
+                return Result.Fail("The customer has to have at least 2 active movies during the last 30 days");
 
-            // at least 100 dollars spent during the last year
             if (PurchasedMovies.Where(x => x.PurchaseDate > DateTime.UtcNow.AddYears(-1)).Sum(x => x.Price) < 100m)
-                return false;
+                return Result.Fail("The customer has to have had at least 100 dollars spent during the last year");
+
+            return Result.Ok();
+        }
+
+        public virtual void Promote()
+        {
+            if (CanPromote().IsFailure)
+                throw new Exception();
 
             Status = Status.Promote();
-
-            return true;
         }
     }
 }

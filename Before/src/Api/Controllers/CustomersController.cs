@@ -75,44 +75,44 @@ namespace Api.Controllers
         [HttpPost]
         public IActionResult Create([FromBody] CreateCustomerDto item)
         {
-            
-                Result<CustomerName> customerNameOrError = CustomerName.Create(item.Name);
-                Result<Email> emailOrError = Email.Create(item.Email);
 
-                Result result = Result.Combine(customerNameOrError, emailOrError);
-                if(result.IsFailure)
-                {
-                    return Error(result.Error);
-                }
+            Result<CustomerName> customerNameOrError = CustomerName.Create(item.Name);
+            Result<Email> emailOrError = Email.Create(item.Email);
 
-                if (_customerRepository.GetByEmail(emailOrError.value) != null)
-                {
-                    return Error("Email is already in use: " + item.Email);
-                }
+            Result result = Result.Combine(customerNameOrError, emailOrError);
+            if (result.IsFailure)
+            {
+                return Error(result.Error);
+            }
 
-                var customer = new Customer(customerNameOrError.value, emailOrError.value);
-                _customerRepository.Add(customer);
+            if (_customerRepository.GetByEmail(emailOrError.value) != null)
+            {
+                return Error("Email is already in use: " + item.Email);
+            }
 
-                return Ok();
+            var customer = new Customer(customerNameOrError.value, emailOrError.value);
+            _customerRepository.Add(customer);
+
+            return Ok();
         }
 
         [HttpPut]
         [Route("{id}")]
         public IActionResult Update(long id, [FromBody] UpdateCustomerDto item)
         {
-                Result<CustomerName> customerNameOrError = CustomerName.Create(item.Name);
-                if(customerNameOrError.IsFailure)
-                {
-                    return Error(customerNameOrError.Error);
-                }
+            Result<CustomerName> customerNameOrError = CustomerName.Create(item.Name);
+            if (customerNameOrError.IsFailure)
+            {
+                return Error(customerNameOrError.Error);
+            }
 
-                Customer customer = _customerRepository.GetById(id);
-                if (customer == null)
-                {
-                    return Error("Invalid customer id: " + id);
-                }
+            Customer customer = _customerRepository.GetById(id);
+            if (customer == null)
+            {
+                return Error("Invalid customer id: " + id);
+            }
 
-                customer.Name = customerNameOrError.value;
+            customer.Name = customerNameOrError.value;
             return Ok();
         }
 
@@ -120,50 +120,37 @@ namespace Api.Controllers
         [Route("{id}/movies")]
         public IActionResult PurchaseMovie(long id, [FromBody] long movieId)
         {
-                Movie movie = _movieRepository.GetById(movieId);
-                if (movie == null)
-                {
-                    return Error("Invalid movie id: " + movieId);
-                }
+            Movie movie = _movieRepository.GetById(movieId);
+            if (movie == null)
+                return Error("Invalid movie id: " + movieId);
 
-                Customer customer = _customerRepository.GetById(id);
-                if (customer == null)
-                {
-                    return Error("Invalid customer id: " + id);
-                }
+            Customer customer = _customerRepository.GetById(id);
+            if (customer == null)
+                return Error("Invalid customer id: " + id);
 
-                if (customer.PurchasedMovies.Any(x => x.Movie.Id == movie.Id && !x.ExpirationDate.IsExpired))
-                {
-                    return Error("The movie is already purchased: " + movie.Name);
-                }
+            if (customer.HasPurchasedMovie(movie))
+                return Error("The movie is already purchased: " + movie.Name);
 
-                customer.PurchasedMovie(movie);
+            customer.PurchasedMovie(movie);
 
-                return Ok();
+            return Ok();
         }
 
         [HttpPost]
         [Route("{id}/promotion")]
         public IActionResult PromoteCustomer(long id)
         {
-                Customer customer = _customerRepository.GetById(id);
-                if (customer == null)
-                {
-                    return Error("Invalid customer id: " + id);
-                }
+            Customer customer = _customerRepository.GetById(id);
+            if (customer == null)
+                return Error("Invalid customer id: " + id);
 
-                if (customer.Status.IsAdvanced)
-                {
-                    return Error("The customer already has the Advanced status");
-                }
+            Result promotionCheck = customer.CanPromote();
+            if (promotionCheck.IsFailure)
+                return Error(promotionCheck.Error);
 
-                bool success = customer.Promote();
-                if (!success)
-                {
-                    return Error("Cannot promote the customer");
-                }
+            customer.Promote();
 
-                return Ok();  
+            return Ok();
         }
     }
 }
