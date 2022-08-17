@@ -1,8 +1,7 @@
-﻿namespace Logic.Entities
+﻿namespace Logic.Entities;
+
+public enum CustomerStatus
 {
-    public enum CustomerStatus
-    {
-        Regular = 1,
-        Advanced = 2
-    }
+    Regular = 1,
+    Advanced = 2
 }

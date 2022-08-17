@@ -1,29 +1,28 @@
 ﻿using System;
 using Logic.Entities;
 
-namespace Logic.Services
+namespace Logic.Services;
+
+public class MovieService
 {
-    public class MovieService
+    public DateTime? GetExpirationDate(LicensingModel licensingModel)
     {
-        public DateTime? GetExpirationDate(LicensingModel licensingModel)
+        DateTime? result;
+
+        switch (licensingModel)
         {
-            DateTime? result;
+            case LicensingModel.TwoDays:
+                result = DateTime.UtcNow.AddDays(2);
+                break;
 
-            switch (licensingModel)
-            {
-                case LicensingModel.TwoDays:
-                    result = DateTime.UtcNow.AddDays(2);
-                    break;
+            case LicensingModel.LifeLong:
+                result = null;
+                break;
 
-                case LicensingModel.LifeLong:
-                    result = null;
-                    break;
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            return result;
+            default:
+                throw new ArgumentOutOfRangeException();
         }
+
+        return result;
     }
 }
