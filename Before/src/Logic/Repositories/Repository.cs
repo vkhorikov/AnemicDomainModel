@@ -1,31 +1,30 @@
 ﻿using Logic.Entities;
 using Logic.Utils;
 
-namespace Logic.Repositories
+namespace Logic.Repositories;
+
+public abstract class Repository<T>
+    where T : Entity
 {
-    public abstract class Repository<T>
-        where T : Entity
+    protected readonly UnitOfWork _unitOfWork;
+
+    protected Repository(UnitOfWork unitOfWork)
     {
-        protected readonly UnitOfWork _unitOfWork;
+        _unitOfWork = unitOfWork;
+    }
 
-        protected Repository(UnitOfWork unitOfWork)
-        {
-            _unitOfWork = unitOfWork;
-        }
+    public T GetById(long id)
+    {
+        return _unitOfWork.Get<T>(id);
+    }
 
-        public T GetById(long id)
-        {
-            return _unitOfWork.Get<T>(id);
-        }
+    public void Add(T entity)
+    {
+        _unitOfWork.SaveOrUpdate(entity);
+    }
 
-        public void Add(T entity)
-        {
-            _unitOfWork.SaveOrUpdate(entity);
-        }
-
-        public void SaveChanges()
-        {
-            _unitOfWork.Commit();
-        }
+    public void SaveChanges()
+    {
+        _unitOfWork.Commit();
     }
 }

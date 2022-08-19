@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using FluentNHibernate.Cfg;
+﻿using FluentNHibernate.Cfg;
 using FluentNHibernate.Cfg.Db;
 using FluentNHibernate.Conventions;
 using FluentNHibernate.Conventions.AcceptanceCriteria;
@@ -7,76 +6,76 @@ using FluentNHibernate.Conventions.Helpers;
 using FluentNHibernate.Conventions.Instances;
 using FluentNHibernate.Mapping;
 using NHibernate;
+using System.Reflection;
 
-namespace Logic.Utils
+namespace Logic.Utils;
+
+public class SessionFactory
 {
-    public class SessionFactory
+    private readonly ISessionFactory _factory;
+
+    public SessionFactory(string connectionString)
     {
-        private readonly ISessionFactory _factory;
+        _factory = BuildSessionFactory(connectionString);
+    }
 
-        public SessionFactory(string connectionString)
+    internal ISession OpenSession()
+    {
+        return _factory.OpenSession();
+    }
+
+    private static ISessionFactory BuildSessionFactory(string connectionString)
+    {
+        FluentConfiguration configuration = Fluently.Configure()
+            .Database(MsSqlConfiguration.MsSql2012.ConnectionString(connectionString))
+            .Mappings(m => m.FluentMappings
+                .AddFromAssembly(Assembly.GetExecutingAssembly())
+                .Conventions.Add(
+                    ForeignKey.EndsWith("ID"),
+                    ConventionBuilder.Property.When(criteria => criteria.Expect(x => x.Nullable, Is.Not.Set), x => x.Not.Nullable()))
+                .Conventions.Add<OtherConversions>()
+                .Conventions.Add<TableNameConvention>()
+                .Conventions.Add<HiLoConvention>()
+            );
+
+        return configuration.BuildSessionFactory();
+    }
+
+
+    private class OtherConversions : IHasManyConvention, IReferenceConvention
+    {
+        public void Apply(IOneToManyCollectionInstance instance)
         {
-            _factory = BuildSessionFactory(connectionString);
+            instance.LazyLoad();
+            instance.AsBag();
+            instance.Cascade.SaveUpdate();
+            instance.Inverse();
         }
 
-        internal ISession OpenSession()
+        public void Apply(IManyToOneInstance instance)
         {
-            return _factory.OpenSession();
+            instance.LazyLoad(Laziness.Proxy);
+            instance.Cascade.None();
+            instance.Not.Nullable();
         }
+    }
 
-        private static ISessionFactory BuildSessionFactory(string connectionString)
+
+    public class TableNameConvention : IClassConvention
+    {
+        public void Apply(IClassInstance instance)
         {
-            FluentConfiguration configuration = Fluently.Configure()
-                .Database(MsSqlConfiguration.MsSql2012.ConnectionString(connectionString))
-                .Mappings(m => m.FluentMappings
-                    .AddFromAssembly(Assembly.GetExecutingAssembly())
-                    .Conventions.Add(
-                        ForeignKey.EndsWith("ID"),
-                        ConventionBuilder.Property.When(criteria => criteria.Expect(x => x.Nullable, Is.Not.Set), x => x.Not.Nullable()))
-                    .Conventions.Add<OtherConversions>()
-                    .Conventions.Add<TableNameConvention>()
-                    .Conventions.Add<HiLoConvention>()
-                );
-
-            return configuration.BuildSessionFactory();
+            instance.Table(instance.EntityType.Name);
         }
+    }
 
 
-        private class OtherConversions : IHasManyConvention, IReferenceConvention
+    public class HiLoConvention : IIdConvention
+    {
+        public void Apply(IIdentityInstance instance)
         {
-            public void Apply(IOneToManyCollectionInstance instance)
-            {
-                instance.LazyLoad();
-                instance.AsBag();
-                instance.Cascade.SaveUpdate();
-                instance.Inverse();
-            }
-
-            public void Apply(IManyToOneInstance instance)
-            {
-                instance.LazyLoad(Laziness.Proxy);
-                instance.Cascade.None();
-                instance.Not.Nullable();
-            }
-        }
-
-
-        public class TableNameConvention : IClassConvention
-        {
-            public void Apply(IClassInstance instance)
-            {
-                instance.Table(instance.EntityType.Name);
-            }
-        }
-
-
-        public class HiLoConvention : IIdConvention
-        {
-            public void Apply(IIdentityInstance instance)
-            {
-                instance.Column(instance.EntityType.Name + "ID");
-                instance.GeneratedBy.Native();
-            }
+            instance.Column(instance.EntityType.Name + "ID");
+            instance.GeneratedBy.Native();
         }
     }
 }

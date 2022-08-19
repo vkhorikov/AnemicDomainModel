@@ -1,77 +1,73 @@
-﻿using System;
+﻿using NHibernate;
 using System.Data;
-using System.Linq;
-using NHibernate;
-using NHibernate.Linq;
 
-namespace Logic.Utils
+namespace Logic.Utils;
+
+public class UnitOfWork : IDisposable
 {
-    public class UnitOfWork : IDisposable
+    private readonly ISession _session;
+    private readonly ITransaction _transaction;
+    private bool _isAlive = true;
+    private bool _isCommitted;
+
+    public UnitOfWork(SessionFactory sessionFactory)
     {
-        private readonly ISession _session;
-        private readonly ITransaction _transaction;
-        private bool _isAlive = true;
-        private bool _isCommitted;
+        _session = sessionFactory.OpenSession();
+        _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
+    }
 
-        public UnitOfWork(SessionFactory sessionFactory)
+    public void Dispose()
+    {
+        if (!_isAlive)
+            return;
+
+        _isAlive = false;
+
+        try
         {
-            _session = sessionFactory.OpenSession();
-            _transaction = _session.BeginTransaction(IsolationLevel.ReadCommitted);
-        }
-
-        public void Dispose()
-        {
-            if (!_isAlive)
-                return;
-
-            _isAlive = false;
-
-            try
+            if (_isCommitted)
             {
-                if (_isCommitted)
-                {
-                    _transaction.Commit();
-                }
-            }
-            finally
-            {
-                _transaction.Dispose();
-                _session.Dispose();
+                _transaction.Commit();
             }
         }
-
-        public void Commit()
+        finally
         {
-            if (!_isAlive)
-                return;
-
-            _isCommitted = true;
+            _transaction.Dispose();
+            _session.Dispose();
         }
+    }
 
-        internal T Get<T>(long id)
-            where T : class
-        {
-            return _session.Get<T>(id);
-        }
+    public void Commit()
+    {
+        if (!_isAlive)
+            return;
 
-        internal void SaveOrUpdate<T>(T entity)
-        {
-            _session.SaveOrUpdate(entity);
-        }
+        _isCommitted = true;
+    }
 
-        internal void Delete<T>(T entity)
-        {
-            _session.Delete(entity);
-        }
+    internal T Get<T>(long id)
+        where T : class
+    {
+        return _session.Get<T>(id);
+    }
 
-        public IQueryable<T> Query<T>()
-        {
-            return _session.Query<T>();
-        }
+    internal void SaveOrUpdate<T>(T entity)
+    {
+        _session.SaveOrUpdate(entity);
+    }
 
-        public ISQLQuery CreateSQLQuery(string q)
-        {
-            return _session.CreateSQLQuery(q);
-        }
+    internal void Delete<T>(T entity)
+    {
+        _session.Delete(entity);
+    }
+
+    public IQueryable<T> Query<T>()
+    {
+        return _session.Query<T>();
+    }
+
+    public ISQLQuery CreateSQLQuery(string q)
+    {
+        return _session.CreateSQLQuery(q);
     }
 }

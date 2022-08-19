@@ -1,8 +1,7 @@
-namespace Logic.Entities
+﻿namespace Logic.Entities;
+
+public enum LicensingModel
 {
-    public enum LicensingModel
-    {
-        TwoDays = 1,
-        LifeLong = 2
-    }
+    TwoDays = 1,
+    LifeLong = 2
 }
